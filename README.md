@@ -1,5 +1,5 @@
 # counter
-佇列管理員
+佇列管理員，可以運用在做系統非同步、資料庫延遲寫入、寄信、區塊鏈上鏈等功能上
 
 ## 資料夾結構
 beans 用來裝Call API後之ResultObject

@@ -32,7 +32,7 @@ func SendMail(c *gin.Context) {
 		log.Println(err)
 	}
 	json, _ := json.Marshal(sendMail)
-	quete := "SendMail</UseService>" + string(json)
+	quete := "Mail/SendMail</UseService>" + string(json)
 	postMessage(quete)
 	c.JSON(http.StatusOK, gin.H{"status": "true"})
 }

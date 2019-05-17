@@ -12,8 +12,6 @@ env 系統設定
 
 route 系統路由設定
 
-services 系統任務執行主程式
-
 main.go 主程式
 
 ## 程式運行原理
@@ -23,9 +21,9 @@ main.go 主程式
 
 本系統透過nsq做為Message Quete
 
-目前它己有一個現成的寄信服務，其他可以依自己做擴充，要修改Resful API，就自己在Route/Web.go裡面設定路由，然後將對應的程式放到Controllers去，要開發供MQ執行的任務，就將程式放到Services去，並修改./main.go的runService內容
+本系統可以搭配服務管理員一起使用
 
-本來有想過這隻程式只做佇列排程就好，最後在透過gRPC或是CURL去呼叫其他的Restful API，這樣會比較乾淨，只是透過外部呼叫效能不會比同一個系統裡面執行還好
+https://github.com/teed7334-restore/homekeeper
 
 如果連nsq都不想自己架的人，可以自己安裝Docker與Docker Compose，自己到./dev_env資料夾下打docker-compose up -d --build，nsq會自己架好
 
@@ -46,6 +44,17 @@ go get -u -v github.com/gin-gonic/gin
 
 ## 程式操作流程
 1. 將./env/env.swp檔名改成env.go
-2. 修改./env/env.go並設定您的SMTP Server與Message Quete Server
+2. 修改./env/env.go並設定您的Message Quete Server
 3. 到./beans底下，運行protoc --go_out=plugins=grpc+retag:. *.proto
 4. go run main.go
+
+## API呼叫網址與參數
+寄信服務(須搭配服務管理員) http://[Your Host Name]:8805/Mail/SendMail
+```
+//HTTP Header需設定成Content-Type: application/json
+{
+    "to": "admin@admin.com",
+    "subject": "這是一封測試信",
+    "content": "這是一封測試信<br />這是一封測試信<br />這是一封測試信<br />這是一封測試信<br />這是一封測試信<br />"
+}
+```

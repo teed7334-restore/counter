@@ -2,6 +2,17 @@
 // source: quete.proto
 // DO NOT EDIT!
 
+/*
+Package beans is a generated protocol buffer package.
+
+It is generated from these files:
+	quete.proto
+	sendMail.proto
+
+It has these top-level messages:
+	Quete
+	SendMail
+*/
 package beans
 
 import proto "github.com/golang/protobuf/proto"
@@ -13,6 +24,12 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+
 type Quete struct {
 	UseService string `protobuf:"bytes,1,opt,name=UseService"   json:"UseService"`
 	UseParams  string `protobuf:"bytes,2,opt,name=UseParams"    json:"UseParams"`
@@ -21,7 +38,7 @@ type Quete struct {
 func (m *Quete) Reset()                    { *m = Quete{} }
 func (m *Quete) String() string            { return proto.CompactTextString(m) }
 func (*Quete) ProtoMessage()               {}
-func (*Quete) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{0} }
+func (*Quete) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
 
 func (m *Quete) GetUseService() string {
 	if m != nil {
@@ -41,9 +58,9 @@ func init() {
 	proto.RegisterType((*Quete)(nil), "beans.Quete")
 }
 
-func init() { proto.RegisterFile("quete.proto", fileDescriptor1) }
+func init() { proto.RegisterFile("quete.proto", fileDescriptor0) }
 
-var fileDescriptor1 = []byte{
+var fileDescriptor0 = []byte{
 	// 98 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2e, 0x2c, 0x4d, 0x2d,
 	0x49, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x4d, 0x4a, 0x4d, 0xcc, 0x2b, 0x56, 0x72,

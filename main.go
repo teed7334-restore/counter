@@ -1,14 +1,12 @@
 package main
 
 import (
-	"encoding/json"
+	"bytes"
 	"log"
+	"net/http"
 	"strings"
 	"time"
 
-	"./services"
-
-	"./beans"
 	"./env"
 	"./route"
 	"github.com/bitly/go-nsq"
@@ -17,7 +15,6 @@ import (
 var cfg = env.GetEnv()
 
 func main() {
-	services.Create("INFO", "存入Elasticsearch")
 	upStream := make(chan time.Time)
 	go func() {
 		webService()
@@ -71,12 +68,20 @@ func getQuete(message string) []string {
 }
 
 func runServices(quete []string) {
-	useService := quete[0]
+	path := quete[0]
 	params := []byte(quete[1])
-	switch useService {
-	case "SendMail":
-		sendMail := &beans.SendMail{}
-		json.Unmarshal(params, sendMail)
-		services.SendMail(sendMail)
+	url := cfg.Housekeeper.Host + "/" + path
+	getURL(url, params)
+}
+
+func getURL(url string, params []byte) {
+	request, err := http.NewRequest("POST", url, bytes.NewBuffer(params))
+	request.Header.Set("X-Custom-Header", "counter")
+	request.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+	resp, err := client.Do(request)
+	if err != nil {
+		log.Panic(err)
 	}
+	defer resp.Body.Close()
 }

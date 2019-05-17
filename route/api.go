@@ -12,7 +12,6 @@ var cfg = env.GetEnv()
 func API() *gin.Engine {
 	gin.SetMode(cfg.Env)
 	route := gin.Default()
-	route.Any("/", controllers.Home)
 	route.POST("/Mail/SendMail", controllers.SendMail)
 	return route
 }

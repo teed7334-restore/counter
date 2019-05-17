@@ -1,0 +1,47 @@
+version: '2'
+services:
+  nsqlookupd:
+    image: 'nsqio/nsq'
+    container_name: 'nsqlookupd'
+    command: /nsqlookupd
+    networks: 
+      server:
+        ipv4_address: 10.1.0.4
+    ports:
+      - '0.0.0.0:4160:4160'
+      - '0.0.0.0:4161:4161'
+    restart: always
+  nsqd:
+    image: 'nsqio/nsq'
+    container_name: 'nsqd'
+    command: /nsqd -data-path=/data --lookupd-tcp-address=nsqlookupd:4160 --broadcast-address=127.0.0.1
+    volumes:
+      - './nsq:/data'
+    depends_on:
+      - nsqlookupd
+    networks: 
+      server:
+        ipv4_address: 10.1.0.3
+    ports:
+      - '0.0.0.0:4150:4150'
+      - '0.0.0.0:4151:4151'
+    restart: always
+  nsadmin:
+    image: 'nsqio/nsq'
+    container_name: 'nsqadmin'
+    command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
+    depends_on:
+      - nsqlookupd
+    networks: 
+      server:
+        ipv4_address: 10.1.0.2
+    ports:
+      - '0.0.0.0:4171:4171'
+    restart: always
+networks:
+  server:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.1.0.0/16
+          gateway: 10.1.0.1

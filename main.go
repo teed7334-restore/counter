@@ -7,8 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"./env"
-	"./route"
+	"counter/env"
+	"counter/route"
+
 	"github.com/bitly/go-nsq"
 )
 

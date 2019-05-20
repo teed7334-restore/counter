@@ -1,8 +1,10 @@
 package route
 
 import (
-	"../controllers"
-	"../env"
+	"counter/controllers"
+
+	"counter/env"
+
 	"github.com/gin-gonic/gin"
 )
 

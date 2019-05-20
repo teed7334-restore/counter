@@ -6,8 +6,10 @@ import (
 	"log"
 	"net/http"
 
-	"../beans"
-	"../env"
+	"counter/beans"
+
+	"counter/env"
+
 	"github.com/bitly/go-nsq"
 	"github.com/gin-gonic/gin"
 )

@@ -1,9 +1,9 @@
 package route
 
 import (
-	"counter/controllers"
+	"github.com/teed7334-restore/counter/controllers"
 
-	"counter/env"
+	"github.com/teed7334-restore/counter/env"
 
 	"github.com/gin-gonic/gin"
 )

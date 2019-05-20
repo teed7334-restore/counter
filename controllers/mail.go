@@ -6,9 +6,9 @@ import (
 	"log"
 	"net/http"
 
-	"counter/beans"
+	"github.com/teed7334-restore/counter/beans"
 
-	"counter/env"
+	"github.com/teed7334-restore/counter/env"
 
 	"github.com/bitly/go-nsq"
 	"github.com/gin-gonic/gin"

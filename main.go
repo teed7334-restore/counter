@@ -7,8 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"counter/env"
-	"counter/route"
+	"github.com/teed7334-restore/counter/route"
+
+	"github.com/teed7334-restore/counter/env"
 
 	"github.com/bitly/go-nsq"
 )
@@ -72,10 +73,10 @@ func runServices(quete []string) {
 	path := quete[0]
 	params := []byte(quete[1])
 	url := cfg.Housekeeper.Host + "/" + path
-	getURL(url, params)
+	postURL(url, params)
 }
 
-func getURL(url string, params []byte) {
+func postURL(url string, params []byte) {
 	request, err := http.NewRequest("POST", url, bytes.NewBuffer(params))
 	request.Header.Set("X-Custom-Header", "counter")
 	request.Header.Set("Content-Type", "application/json")

@@ -15,5 +15,6 @@ func API() *gin.Engine {
 	gin.SetMode(cfg.Env)
 	route := gin.Default()
 	route.POST("/Mail/SendMail", controllers.SendMail)
+	route.POST("/PunchClock/UploadDailyPunchclockData", controllers.UploadDailyPunchclockData)
 	return route
 }

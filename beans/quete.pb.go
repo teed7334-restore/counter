@@ -7,10 +7,12 @@ Package beans is a generated protocol buffer package.
 
 It is generated from these files:
 	quete.proto
+	response.proto
 	sendMail.proto
 
 It has these top-level messages:
 	Quete
+	Response
 	SendMail
 */
 package beans

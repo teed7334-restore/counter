@@ -58,3 +58,33 @@ go get -u -v github.com/gin-gonic/gin
     "content": "這是一封測試信<br />這是一封測試信<br />這是一封測試信<br />這是一封測試信<br />這是一封測試信<br />"
 }
 ```
+
+將每天員工打卡資料上鏈(須搭配服務管理員) http://[Your Host Name]:8805/PunchClock/UploadDailyPunchclockData
+```
+//HTTP Header需設定成Content-Type: application/json
+{
+  "employee": {
+    "identify": "00190",
+    "firstName": "Peter",
+    "lastName": "Cheng"
+  },
+  "punchclock": {
+    "begin": {
+      "year": "2019",
+      "month": "08",
+      "day": "28",
+      "hour": "09",
+      "minute": "24",
+      "second": "00"
+    },
+    "end": {
+      "year": "2019",
+      "month": "08",
+      "day": "28",
+      "hour": "20",
+      "minute": "05",
+      "second": "00"
+    }
+  }
+}
+```

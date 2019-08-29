@@ -43,11 +43,23 @@ func messageService() {
 
 //InitConsumer 初始化消費者
 func InitConsumer(topic string, channel string, host string) bool {
-	interval := time.Second * 2
 	upStream := make(chan int, 1)
+	go func() {
+		interval := time.Second * 10
+		mQuery(host, "PunchClock", "UploadDailyPunchclockData", interval)
+	}()
+	go func() {
+		interval := time.Second * 2
+		mQuery(host, "Mail", "SendMail", interval)
+	}()
+	<-upStream
+	return true
+}
+
+func mQuery(host string, topic string, channel string, interval time.Duration) *nsq.Consumer {
 	config := nsq.NewConfig()
 	config.LookupdPollInterval = interval
-	query, err := nsq.NewConsumer("Mail", "SendMail", config)
+	query, err := nsq.NewConsumer(topic, channel, config)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -57,11 +69,11 @@ func InitConsumer(topic string, channel string, host string) bool {
 		runServices(quete)
 		return nil
 	}))
-	if err = query.ConnectToNSQLookupd(host); err != nil {
+	err = query.ConnectToNSQLookupd(host)
+	if err != nil {
 		panic(err)
 	}
-	<-upStream
-	return true
+	return query
 }
 
 func getQuete(message string) []string {

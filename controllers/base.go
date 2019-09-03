@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/bitly/go-nsq"
@@ -18,7 +17,7 @@ func postMessage(channel string, message string) {
 	w, _ := nsq.NewProducer(cfg.Message.Post.Address, config)
 	err := w.Publish(channel, []byte(message))
 	if err != nil {
-		fmt.Println(err)
+		log.Panicln(err)
 	}
 	w.Stop()
 }
@@ -27,6 +26,6 @@ func postMessage(channel string, message string) {
 func getParams(c *gin.Context, params interface{}) {
 	err := c.BindJSON(params)
 	if err != nil {
-		log.Println(err)
+		log.Panicln(err)
 	}
 }

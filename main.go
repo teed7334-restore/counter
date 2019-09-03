@@ -44,24 +44,22 @@ func messageService() {
 //InitConsumer 初始化消費者
 func InitConsumer(topic string, channel string, host string) bool {
 	upStream := make(chan int, 1)
-	go func() {
-		interval := time.Second * 10
-		mQuery(host, "PunchClock", "UploadDailyPunchclockData", interval)
-	}()
-	go func() {
-		interval := time.Second * 2
-		mQuery(host, "Mail", "SendMail", interval)
-	}()
+	for _, worker := range cfg.Works.Worker {
+		go func(worker *env.Worker) {
+			mQuery(host, worker.Topic, worker.Channel, worker.Interval)
+		}(worker)
+	}
 	<-upStream
 	return true
 }
 
+//mQuery 啟用單一消費者
 func mQuery(host string, topic string, channel string, interval time.Duration) *nsq.Consumer {
 	config := nsq.NewConfig()
 	config.LookupdPollInterval = interval
 	query, err := nsq.NewConsumer(topic, channel, config)
 	if err != nil {
-		log.Panic(err)
+		log.Panicln(err)
 	}
 	query.AddHandler(nsq.HandlerFunc(func(message *nsq.Message) error {
 		chat := string(message.Body)
@@ -71,16 +69,18 @@ func mQuery(host string, topic string, channel string, interval time.Duration) *
 	}))
 	err = query.ConnectToNSQLookupd(host)
 	if err != nil {
-		panic(err)
+		log.Panicln(err)
 	}
 	return query
 }
 
+//getQuete 取得工作內容
 func getQuete(message string) []string {
 	quete := strings.Split(message, "</UseService>")
 	return quete
 }
 
+//runServices 運行系統服務
 func runServices(quete []string) {
 	path := quete[0]
 	params := []byte(quete[1])
@@ -88,6 +88,7 @@ func runServices(quete []string) {
 	postURL(url, params)
 }
 
+//postURL 將資料打到REST API
 func postURL(url string, params []byte) {
 	request, err := http.NewRequest("POST", url, bytes.NewBuffer(params))
 	request.Header.Set("X-Custom-Header", "counter")
@@ -95,7 +96,7 @@ func postURL(url string, params []byte) {
 	client := &http.Client{}
 	resp, err := client.Do(request)
 	if err != nil {
-		log.Panic(err)
+		log.Panicln(err)
 	}
 	defer resp.Body.Close()
 }

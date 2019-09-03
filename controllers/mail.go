@@ -13,10 +13,16 @@ import (
 func SendMail(c *gin.Context) {
 	params := &beans.SendMail{}
 	getParams(c, params)
-	json, _ := json.Marshal(params)
+	response := doSendMail(params)
+	c.JSON(http.StatusOK, response)
+}
+
+//doSendMail 運行寄信用API
+func doSendMail(params *beans.SendMail) *beans.Response {
+	jsonStr, _ := json.Marshal(params)
 	channel := "Mail"
-	message := "Mail/SendMail</UseService>" + string(json)
+	message := "Mail/SendMail</UseService>" + string(jsonStr)
 	postMessage(channel, message)
 	response := &beans.Response{Status: true, Channel: channel, Message: message}
-	c.JSON(http.StatusOK, response)
+	return response
 }

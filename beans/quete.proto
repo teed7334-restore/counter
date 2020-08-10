@@ -1,8 +1,0 @@
-syntax="proto3";
-
-package beans;
-
-message Quete {
-    string UseService = 1; //`json:"UseService"`
-    string UseParams = 2; //`json:"UseParams"`
-}

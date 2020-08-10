@@ -2,22 +2,21 @@ package controllers
 
 import (
 	"log"
+	"os"
 
-	"github.com/bitly/go-nsq"
-	"github.com/teed7334-restore/counter/env"
+	nsq "github.com/nsqio/go-nsq"
 
 	"github.com/gin-gonic/gin"
 )
 
-var cfg = env.GetEnv()
-
 //將要執行的排程寫到MQ postMessage
 func postMessage(channel string, message string) {
 	config := nsq.NewConfig()
-	w, _ := nsq.NewProducer(cfg.Message.Post.Address, config)
+	address := os.Getenv("message.post.address")
+	w, _ := nsq.NewProducer(address, config)
 	err := w.Publish(channel, []byte(message))
 	if err != nil {
-		log.Panicln(err)
+		log.Println(err)
 	}
 	w.Stop()
 }
@@ -26,6 +25,6 @@ func postMessage(channel string, message string) {
 func getParams(c *gin.Context, params interface{}) {
 	err := c.BindJSON(params)
 	if err != nil {
-		log.Panicln(err)
+		log.Println(err)
 	}
 }

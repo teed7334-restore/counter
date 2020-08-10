@@ -1,9 +1,0 @@
-syntax="proto3";
-
-package beans;
-
-message Response {
-    bool Status = 1; //`json:"Status"`
-    string Channel = 2; //`json:"Channel"`
-    string Message = 3; //`json:"Message"`
-}

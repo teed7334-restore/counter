@@ -4,14 +4,16 @@ import (
 	"bytes"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
+	"github.com/teed7334-restore/counter/env"
 	"github.com/teed7334-restore/counter/route"
 
-	"github.com/teed7334-restore/counter/env"
+	_ "github.com/joho/godotenv/autoload"
 
-	"github.com/bitly/go-nsq"
+	nsq "github.com/nsqio/go-nsq"
 )
 
 var cfg = env.GetEnv()
@@ -37,8 +39,10 @@ func webService() {
 
 //messageService Message Quete服務
 func messageService() {
-	host := cfg.Message.Received.Address
-	InitConsumer(cfg.Message.Topic, cfg.Message.Channel, host)
+	host := os.Getenv("message.received.address")
+	topic := os.Getenv("message.topic")
+	channel := os.Getenv("message.channel")
+	InitConsumer(topic, channel, host)
 }
 
 //InitConsumer 初始化消費者
@@ -59,7 +63,7 @@ func mQuery(host string, topic string, channel string, interval time.Duration) *
 	config.LookupdPollInterval = interval
 	query, err := nsq.NewConsumer(topic, channel, config)
 	if err != nil {
-		log.Panicln(err)
+		log.Println(err)
 	}
 	query.AddHandler(nsq.HandlerFunc(func(message *nsq.Message) error {
 		chat := string(message.Body)
@@ -69,7 +73,7 @@ func mQuery(host string, topic string, channel string, interval time.Duration) *
 	}))
 	err = query.ConnectToNSQLookupd(host)
 	if err != nil {
-		log.Panicln(err)
+		log.Println(err)
 	}
 	return query
 }
@@ -84,7 +88,8 @@ func getQuete(message string) []string {
 func runServices(quete []string) {
 	path := quete[0]
 	params := []byte(quete[1])
-	url := cfg.Housekeeper.Host + "/" + path
+	host := os.Getenv("housekeeper.host")
+	url := host + "/" + path
 	postURL(url, params)
 }
 
@@ -96,7 +101,7 @@ func postURL(url string, params []byte) {
 	client := &http.Client{}
 	resp, err := client.Do(request)
 	if err != nil {
-		log.Panicln(err)
+		log.Println(err)
 	}
 	defer resp.Body.Close()
 }
